@@ -1,8 +1,9 @@
 package com.utfpr.users.controller;
 
-import com.utfpr.users.entity.User;
+import com.utfpr.users.dto.UserRequestDTO;
+import com.utfpr.users.dto.UserResponseDTO;
 import com.utfpr.users.service.UserService;
-import jakarta.validation.Valid; // Import necessário para validação
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,23 +18,23 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
+    public List<UserResponseDTO> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable Long id) {
+    public UserResponseDTO getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
 
     @PostMapping
-    public User createUser(@Valid @RequestBody User user) { // Adicionado @Valid
-        return userService.createUser(user);
+    public UserResponseDTO createUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
+        return userService.createUser(userRequestDTO);
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @Valid @RequestBody User user) { // Adicionado @Valid
-        return userService.updateUser(id, user);
+    public UserResponseDTO updateUser(@PathVariable Long id, @Valid @RequestBody UserRequestDTO userRequestDTO) {
+        return userService.updateUser(id, userRequestDTO);
     }
 
     @DeleteMapping("/{id}")
