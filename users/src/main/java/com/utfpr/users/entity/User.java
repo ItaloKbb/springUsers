@@ -5,6 +5,7 @@ import lombok.*;
 
 @Entity
 @Data
+@Table(name = "users") // Nome diferente para evitar conflito com palavras reservadas
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
