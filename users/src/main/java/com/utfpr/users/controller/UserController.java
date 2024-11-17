@@ -2,6 +2,7 @@ package com.utfpr.users.controller;
 
 import com.utfpr.users.entity.User;
 import com.utfpr.users.service.UserService;
+import jakarta.validation.Valid; // Import necessário para validação
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,12 +27,12 @@ public class UserController {
     }
 
     @PostMapping
-    public User createUser(@RequestBody User user) {
+    public User createUser(@Valid @RequestBody User user) { // Adicionado @Valid
         return userService.createUser(user);
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User user) {
+    public User updateUser(@PathVariable Long id, @Valid @RequestBody User user) { // Adicionado @Valid
         return userService.updateUser(id, user);
     }
 
