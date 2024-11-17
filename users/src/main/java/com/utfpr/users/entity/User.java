@@ -5,6 +5,7 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 
 @Entity
+@Table(name = "users") // Nome diferente para evitar conflito com palavras reservadas
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
