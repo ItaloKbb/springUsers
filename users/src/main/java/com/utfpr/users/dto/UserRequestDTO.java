@@ -4,18 +4,19 @@ import jakarta.validation.constraints.*;
 
 public class UserRequestDTO {
 
-    @NotBlank(message = "Username é obrigatório")
-    @Size(min = 3, max = 50, message = "Username deve ter entre 3 e 50 caracteres")
+    @NotBlank(message = "Username is mandatory.")
+    @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters.")
     private String username;
 
-    @NotBlank(message = "Password é obrigatório")
+    @NotBlank(message = "Password is mandatory.")
+    @Size(min = 6, message = "Password must be at least 6 characters long.")
     private String password;
 
-    @Email(message = "Email deve ser válido")
-    @NotBlank(message = "Email é obrigatório")
+    @Email(message = "Email must be valid.")
+    @NotBlank(message = "Email is mandatory.")
     private String email;
 
-    // Getters e Setters
+    // Getters and Setters
     public String getUsername() {
         return username;
     }
