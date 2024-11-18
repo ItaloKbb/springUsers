@@ -10,15 +10,24 @@
 	</parent>
 	<groupId>com.utfpr</groupId>
 	<artifactId>users</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1-RELEASE</version>
 	<name>users</name>
-	<description>Demo project for Spring Boot</description>
+	<description>API de usuarios básica (sem autenticação) em Spring Boot [Utilizado swagger, spring boot, postgresSQL e lombok]</description>
 	<url/>
 	<licenses>
 		<license/>
 	</licenses>
 	<developers>
-		<developer/>
+		<developer>
+			<id>italo</id> <!-- Um identificador único para o desenvolvedor -->
+			<name>Italo Kaique</name> <!-- Nome do desenvolvedor -->
+			<email>italohyu122@gmail.com</email> <!-- Email de contato -->
+			<roles>
+				<role>Lead Developer</role> <!-- Função no projeto -->
+			</roles>
+			<organization>UTFPR</organization> <!-- Organização -->
+			<organizationUrl>https://utfpr.edu.br</organizationUrl> <!-- URL da organização -->
+		</developer>
 	</developers>
 	<scm>
 		<connection/>
