@@ -6,6 +6,7 @@ import com.utfpr.users.entity.User;
 import com.utfpr.users.exception.UserNotFoundException;
 import com.utfpr.users.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,9 +15,11 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<UserResponseDTO> getAllUsers() {
@@ -34,7 +37,7 @@ public class UserService {
     public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
         User user = new User();
         user.setUsername(userRequestDTO.getUsername());
-        user.setPassword(userRequestDTO.getPassword());
+        user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword())); // Criptografa a senha
         user.setEmail(userRequestDTO.getEmail());
         User savedUser = userRepository.save(user);
         return new UserResponseDTO(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail());
