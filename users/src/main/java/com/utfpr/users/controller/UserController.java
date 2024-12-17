@@ -19,6 +19,12 @@ public class UserController {
         this.userService = userService;
     }
 
+    @PostMapping("/validate")
+    @ResponseStatus(HttpStatus.OK)
+    public Boolean validateBasicAuth(@RequestHeader("Authorization") String authHeader) {
+        return userService.validateBasicAuth(authHeader);
+    }
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<UserResponseDTO> getAllUsers() {

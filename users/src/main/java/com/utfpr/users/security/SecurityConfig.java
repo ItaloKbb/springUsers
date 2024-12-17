@@ -1,4 +1,5 @@
 package com.utfpr.users.security;
+
 import com.utfpr.users.service.CustomUserDetailsService;
 
 import org.springframework.context.annotation.Bean;
@@ -35,13 +36,21 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .exceptionHandling(exception -> exception
-                .authenticationEntryPoint(authenticationEntryPoint) // Trata erro de autenticação
-                .accessDeniedHandler(accessDeniedHandler) // Trata erro de acesso negado
+                .authenticationEntryPoint(authenticationEntryPoint)
+                .accessDeniedHandler(accessDeniedHandler)
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/**").permitAll()
-                .requestMatchers("POST", "/api/users").authenticated()
-                .anyRequest().authenticated())
+                // Rotas públicas liberadas
+                .requestMatchers("/v3/api-docs/**").permitAll()
+                .requestMatchers("/actuator/**").permitAll()
+                
+                // Rotas que exigem autenticação
+                .requestMatchers("POST", "/api/users/**").authenticated()
+                .requestMatchers("/api/users/**").authenticated()
+                
+                // Qualquer outra rota deve ser autenticada
+                .anyRequest().authenticated()
+            )
             .httpBasic();
 
         return http.build();
