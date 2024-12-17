@@ -24,3 +24,6 @@
 
 ### Execução do projeto
 1. Executar utilizando spring tools ou comandos CMD.
+
+### Arquitetura
+![Imagem demonstrando arquitetura de sistema da api de autenticação basic com banco postgres](images/arquitetura-readme.png)
