@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .accessDeniedHandler(accessDeniedHandler) // Trata erro de acesso negado
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/**").permitAll()
+                .requestMatchers("/**").permitAll()
                 .requestMatchers("POST", "/api/users").authenticated()
                 .anyRequest().authenticated())
             .httpBasic();
