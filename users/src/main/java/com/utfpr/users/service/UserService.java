@@ -3,6 +3,8 @@ package com.utfpr.users.service;
 import com.utfpr.users.dto.UserRequestDTO;
 import com.utfpr.users.dto.UserResponseDTO;
 import com.utfpr.users.entity.User;
+import com.utfpr.users.exception.DuplicateEmailException;
+import com.utfpr.users.exception.DuplicateUsernameException;
 import com.utfpr.users.exception.UserNotFoundException;
 import com.utfpr.users.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,11 @@ public class UserService {
     }
 
     public Boolean validateBasicAuth(String authHeader) {
+        // Chama o método completo com o valor padrão para isAdmin
+        return validateBasicAuth(authHeader, "false");
+    }
+
+    public Boolean validateBasicAuth(String authHeader, String isAdmin) {
         // Verifica se o header começa com "Basic "
         if (authHeader == null || !authHeader.startsWith("Basic ")) {
             return false;
@@ -43,6 +50,12 @@ public class UserService {
         String username = values[0];
         String password = values[1];
 
+        if (isAdmin == "true") { // Caso permita apenas admin, vai bloquear o uso da rota se for outro user.
+            if (username != "ADMIN") {
+                return false;
+            }
+        }
+
         // Valida as credenciais (substitua pela lógica real)
         return validateCredentialsFromDB(username, password);
     }
@@ -50,11 +63,11 @@ public class UserService {
     private Boolean validateCredentialsFromDB(String username, String password) {
         // Busca o usuário pelo username no banco de dados
         Optional<User> userOptional = userRepository.findByUsername(username);
-    
+
         // Verifica se o usuário existe e a senha é válida
         return userOptional.isPresent() && passwordEncoder.matches(password, userOptional.get().getPassword());
     }
-    
+
     public List<UserResponseDTO> getAllUsers() {
         return userRepository.findAll()
                 .stream()
@@ -68,11 +81,26 @@ public class UserService {
     }
 
     public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
+        // Verifica se o username já existe
+        if (userRepository.existsByUsername(userRequestDTO.getUsername())) {
+            throw new DuplicateUsernameException("Username já está em uso.");
+        }
+
+        // Verifica se o email já existe
+        if (userRepository.existsByEmail(userRequestDTO.getEmail())) {
+            throw new DuplicateEmailException("Email já está em uso.");
+        }
+
+        // Cria o novo usuário
         User user = new User();
         user.setUsername(userRequestDTO.getUsername());
         user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword())); // Criptografa a senha
         user.setEmail(userRequestDTO.getEmail());
+
+        // Salva o usuário no banco de dados
         User savedUser = userRepository.save(user);
+
+        // Retorna o DTO de resposta
         return new UserResponseDTO(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail());
     }
 

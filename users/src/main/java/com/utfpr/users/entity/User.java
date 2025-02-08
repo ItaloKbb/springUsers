@@ -18,6 +18,7 @@ public class User {
 
     @NotBlank(message = "Username é obrigatório")
     @Size(min = 3, max = 50, message = "Username deve ter entre 3 e 50 caracteres")
+    @Column(unique = true) // Garante que o username seja único
     private String username;
 
     @NotBlank(message = "Password é obrigatório")
@@ -25,5 +26,6 @@ public class User {
 
     @Email(message = "Email deve ser válido")
     @NotBlank(message = "Email é obrigatório")
+    @Column(unique = true) // Garante que o email seja único
     private String email;
 }

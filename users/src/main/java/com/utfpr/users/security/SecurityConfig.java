@@ -1,11 +1,10 @@
 package com.utfpr.users.security;
 
 import com.utfpr.users.service.CustomUserDetailsService;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,34 +33,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
+            .csrf(csrf -> csrf.disable()) // Desabilita CSRF (comum em APIs RESTful)
             .exceptionHandling(exception -> exception
-                .authenticationEntryPoint(authenticationEntryPoint)
-                .accessDeniedHandler(accessDeniedHandler)
+                .authenticationEntryPoint(authenticationEntryPoint) // Personaliza respostas de erro de autenticação
+                .accessDeniedHandler(accessDeniedHandler) // Personaliza respostas de erro de acesso negado
             )
             .authorizeHttpRequests(auth -> auth
-                // Rotas públicas liberadas
-                .requestMatchers("/v3/api-docs/**").permitAll()
-                .requestMatchers("/actuator/**").permitAll()
-                
-                // Rotas que exigem autenticação
-                .requestMatchers("POST", "/api/users/**").authenticated()
-                .requestMatchers("/api/users/**").authenticated()
-                
-                // Qualquer outra rota deve ser autenticada
-                .anyRequest().authenticated()
-            )
-            .httpBasic();
+                .requestMatchers("GET", "/**").permitAll() // Permite GET público
+                .requestMatchers("POST", "/**").permitAll() // Permite POST público
+                .anyRequest().authenticated() // Bloqueia outros métodos para usuários não autenticados
+            );
 
         return http.build();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
-                   .userDetailsService(userDetailsService)
-                   .passwordEncoder(passwordEncoder())
-                   .and()
-                   .build();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
     }
 }
