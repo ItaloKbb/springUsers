@@ -50,8 +50,8 @@ public class UserService {
         String username = values[0];
         String password = values[1];
 
-        if (isAdmin == "true") { // Caso permita apenas admin, vai bloquear o uso da rota se for outro user.
-            if (username != "ADMIN") {
+        if ("true".equals(isAdmin)) { 
+            if (!"ADMIN".equals(username)) {
                 return false;
             }
         }
@@ -61,12 +61,20 @@ public class UserService {
     }
 
     private Boolean validateCredentialsFromDB(String username, String password) {
-        // Busca o usuário pelo username no banco de dados
         Optional<User> userOptional = userRepository.findByUsername(username);
-
-        // Verifica se o usuário existe e a senha é válida
-        return userOptional.isPresent() && passwordEncoder.matches(password, userOptional.get().getPassword());
-    }
+    
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+    
+            // 🚀 Verificando as senhas
+            System.out.println("Senha armazenada no banco: " + user.getPassword());
+            System.out.println("Senha informada: " + password);
+            System.out.println("Senha bate? " + passwordEncoder.matches(password, user.getPassword()));
+    
+            return passwordEncoder.matches(password, user.getPassword());
+        }
+        return false;
+    }    
 
     public List<UserResponseDTO> getAllUsers() {
         return userRepository.findAll()

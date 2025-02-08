@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.User.UserBuilder;
 import org.springframework.stereotype.Service;
+import java.util.Collections;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -26,8 +27,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         UserBuilder builder = org.springframework.security.core.userdetails.User.builder();
         builder.username(user.getUsername());
-        builder.password(user.getPassword());   
+        builder.password(user.getPassword());
 
+        // 🔹 Adiciona um papel padrão "USER" se o usuário não tiver roles específicas
+        builder.roles("USER");
         return builder.build();
     }
 }

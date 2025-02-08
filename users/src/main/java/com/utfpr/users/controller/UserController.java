@@ -4,6 +4,7 @@ import com.utfpr.users.dto.UserRequestDTO;
 import com.utfpr.users.dto.UserResponseDTO;
 import com.utfpr.users.exception.UserNotFoundException;
 import com.utfpr.users.service.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -46,12 +47,14 @@ public class UserController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @SecurityRequirement(name = "basicAuth") // Requer autenticação para PUT
     public UserResponseDTO updateUser(@PathVariable Long id, @Valid @RequestBody UserRequestDTO userRequestDTO) {
         return userService.updateUser(id, userRequestDTO);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @SecurityRequirement(name = "basicAuth") // Requer autenticação para DELETE
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
     }
